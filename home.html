@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    function pageLoad() {
+      console.log("calling method");
+      const customerData = getCustomers();
+      displayCustomerTable(customerData);
+    }
+
+    function deleteCustomer(uuid) {
+    
+    console.log("Delete button clicked for UUID:", uuid);
+    const url = "https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp";
+    const token = getAuthToken(); // Replace with the actual token
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      headers: {
+        "Authorization": "Bearer " + token
+      },
+      data: {
+        cmd: "delete",
+        uuid: uuid
+      },
+      success: function(response) {
+        if (response === "200, Successfully deleted") {
+          alert("Customer deleted successfully!");
+          location.reload(); // Reload the page after successful deletion
+        } else if (response === "400, UUID not found") {
+          alert("UUID not found");
+        } else {
+          alert("Error: Customer not deleted");
+        }
+      },
+      error: function() {
+        alert("Error: Customer not deleted");
+      }
+    });
+  }
+  function editCustomer(uuid) {
+      // Redirect to edit.html with the UUID as a query parameter
+      window.location.href = "edit.html?uuid=" + uuid;
+    }
+
+
+    document.addEventListener('DOMContentLoaded', pageLoad);
+  </script>
+</head>
+
+<body>
+  <button onclick="redirectToAddCustomer()">Add Customer</button>
+  <div id="customer_data"></div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script type="text/javascript" src="script.js"></script>
+</html>
